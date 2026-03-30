@@ -23,6 +23,39 @@ namespace DrinkChoice
         public RestaurantControl()
         {
             InitializeComponent();
+            LoadChoice();
+        }
+
+        public void LoadChoice()
+        {
+            //create and add CheckBoxes for all SodaChoices
+            //put them all in a StackPanel
+            
+            if (DataContext is Restaurant r)
+            {
+
+                //we want a CheckBox for everything in r.PossibleSodas
+                StackPanel stack = new StackPanel();
+
+                foreach (SodaChoice choice in r.PossibleSodas)
+                {
+                    CheckBox box = new CheckBox();
+                    box.DataContext = choice;
+                    Binding binding = new Binding();
+                    binding.Path = new PropertyPath(nameof(choice.Chosen));
+                    binding.Mode = BindingMode.TwoWay;
+                    BindingOperations.SetBinding(box, CheckBox.IsCheckedProperty, binding);
+
+                    TextBlock block = new TextBlock();
+                    block.Text = choice.ToString();
+                    box.Content = block;
+
+                    stack.Children.Add(box); //Adds checkbox to stack panel
+                }
+
+                //Add stack to dock panel
+                restDock.Children.Add(stack);
+            }
         }
     }
 }
